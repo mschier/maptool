@@ -142,6 +142,10 @@ public class LookupTablePanel extends AbeillePanel<LookupTableImagePanelModel> {
     return (JButton) getComponent("exportButton");
   }
 
+  public JButton getCsvImportButton() {
+    return (JButton) getComponent("csvImportButton");
+  }
+
   public void initDuplicateButton() {
     getDuplicateButton().setMargin(new Insets(0, 0, 0, 0));
     getDuplicateButton()
@@ -310,6 +314,45 @@ public class LookupTablePanel extends AbeillePanel<LookupTableImagePanelModel> {
                         } catch (IOException ioe) {
                           ioe.printStackTrace();
                           MapTool.showError("LookupTablePanel.error.saveFailed", ioe);
+                        }
+                      }
+                    });
+              }
+            });
+  }
+
+  public void initCsvImportButton() {
+    /*
+    TODO Rename everything from "import" to "new from" or some thing like it
+    TODO Consider moving the button to a EditLookupTablePanel
+    TODO Add a tooltip to the button, describing the formatting
+    */
+    getCsvImportButton().setMargin(new Insets(0, 0, 0, 0));
+    getCsvImportButton()
+        .addActionListener(
+            new ActionListener() {
+              public void actionPerformed(ActionEvent e) {
+                JFileChooser chooser = MapTool.getFrame().getLoadCsvFileChooser();
+
+                if (chooser.showOpenDialog(MapTool.getFrame()) != JFileChooser.APPROVE_OPTION) {
+                  return;
+                }
+                final File selectedFile = chooser.getSelectedFile();
+                // TODO Is it even required to invoke this later?
+                EventQueue.invokeLater(
+                    new Runnable() {
+                      public void run() {
+                        try {
+                          LookupTable newTable = PersistenceUtil.loadCsvTable(selectedFile);
+                          editorPanel.attach(newTable);
+
+                          getEditorDialog().setTitle(I18N.getString("LookupTablePanel.msg.titleNew"));
+                          getEditorDialog().setVisible(true);
+
+                          imagePanel.clearSelection();
+                          repaint();
+                        } catch (IOException ioe) {
+                          MapTool.showError("LookupTablePanel.error.loadFailed", ioe);
                         }
                       }
                     });

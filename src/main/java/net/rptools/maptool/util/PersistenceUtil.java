@@ -20,13 +20,7 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
@@ -68,6 +62,7 @@ import net.rptools.maptool.model.transform.campaign.PCVisionTransform;
 import net.rptools.maptool.model.transform.campaign.TokenPropertyMapTransform;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.input.BOMInputStream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -1011,6 +1006,29 @@ public class PersistenceUtil {
       } catch (IOException ioe) {
         MapTool.showError("PersistenceUtil.error.tableRead", ioe);
       }
+    }
+    return null;
+  }
+
+  public static LookupTable loadCsvTable(File file) throws IOException {
+    if (!file.exists()) throw new FileNotFoundException();
+
+    try (FileInputStream in = new FileInputStream(file)) {
+
+      LookupTable lookupTable = new LookupTable();
+
+
+      Reader r = new InputStreamReader(new BOMInputStream(in), "UTF-8");
+
+      List<String> values = CSVUtil.parseLine(r);
+      while (values != null) {
+        //TODO Ensure proper error messaging about formatting
+        lookupTable.addEntry(values);
+        values = CSVUtil.parseLine(r);
+      }
+      return lookupTable;
+    } catch (Exception e) {
+      MapTool.showError("PersistenceUtil.error.tableRead", e);
     }
     return null;
   }
