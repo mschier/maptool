@@ -1019,7 +1019,7 @@ public class PersistenceUtil {
 
       List<String> values = CSVUtil.parseLine(r);
       while (values != null) {
-        //TODO Ensure proper error messaging about formatting
+        // TODO Ensure proper error messaging about formatting
         lookupTable.addEntry(values);
         values = CSVUtil.parseLine(r);
       }

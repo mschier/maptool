@@ -170,29 +170,28 @@ public class EditLookupTablePanel extends AbeillePanel<LookupTableTableModel> {
     return (JCheckBox) getComponent("allowLookupCheckbox");
   }
 
-  public void initAddFromCSVButton() {
+  public void initFromCSVButton() {
     JButton button = (JButton) getComponent("fromCSVButton");
     button.addActionListener(
-            new ActionListener() {
-              public void actionPerformed(ActionEvent e) {
-                JFileChooser chooser = MapTool.getFrame().getLoadCsvFileChooser();
+        new ActionListener() {
+          public void actionPerformed(ActionEvent e) {
+            JFileChooser chooser = MapTool.getFrame().getLoadCsvFileChooser();
 
-                if (chooser.showOpenDialog(MapTool.getFrame()) != JFileChooser.APPROVE_OPTION) {
-                  return;
-                }
-
-                final File selectedFile = chooser.getSelectedFile();
-                try {
-                  PersistenceUtil.loadCsvTable(selectedFile, lookupTable);
-                  getTableDefinitionTable().setModel(createLookupTableModel(lookupTable));
-                  getTableRollTextField().setText(lookupTable.getRoll());
-                  updateDefinitionTableRowHeights();
-                } catch (IOException ioe) {
-                  MapTool.showError("LookupTablePanel.error.loadFailed", ioe);
-                }
-              }
+            if (chooser.showOpenDialog(MapTool.getFrame()) != JFileChooser.APPROVE_OPTION) {
+              return;
             }
-    );
+
+            final File selectedFile = chooser.getSelectedFile();
+            try {
+              PersistenceUtil.loadCsvTable(selectedFile, lookupTable);
+              getTableDefinitionTable().setModel(createLookupTableModel(lookupTable));
+              getTableRollTextField().setText(lookupTable.getRoll());
+              updateDefinitionTableRowHeights();
+            } catch (IOException ioe) {
+              MapTool.showError("LookupTablePanel.error.loadFailed", ioe);
+            }
+          }
+        });
   }
 
   public void initCancelButton() {

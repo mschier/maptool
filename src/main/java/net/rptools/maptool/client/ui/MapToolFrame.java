@@ -239,8 +239,7 @@ public class MapToolFrame extends DefaultDockableHolder
       new MTFileFilter("mtmacset", I18N.getText("file.ext.mtmacset"));
   private final FileFilter tableFilter =
       new MTFileFilter("mttable", I18N.getText("file.ext.mttable"));
-  private final FileFilter csvFilter =
-          new MTFileFilter("csv", I18N.getText("file.ext.csv"));
+  private final FileFilter csvFilter = new MTFileFilter("csv", I18N.getText("file.ext.csv"));
 
   private final FileFilter dungeonDraftFilter =
       new MTFileFilter("dd2vtt", I18N.getText("file.ext.dungeondraft"));

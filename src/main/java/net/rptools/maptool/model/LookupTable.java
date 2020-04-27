@@ -71,9 +71,9 @@ public class LookupTable {
   }
 
   public void addEntry(List<String> strings) {
-    //TODO Consider externalizing this functionality to PersistenceUtil instead
-    //TODO Refactor
-    //TODO Ensure proper error messages for formatting errors
+    // TODO Consider externalizing this functionality to PersistenceUtil instead
+    // TODO Refactor
+    // TODO Ensure proper error messages for formatting errors
     int min = 0;
     int max = 0;
     String value = null;
