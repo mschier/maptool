@@ -1010,13 +1010,10 @@ public class PersistenceUtil {
     return null;
   }
 
-  public static LookupTable loadCsvTable(File file) throws IOException {
+  public static void loadCsvTable(File file, LookupTable lookupTable) throws IOException {
     if (!file.exists()) throw new FileNotFoundException();
 
     try (FileInputStream in = new FileInputStream(file)) {
-
-      LookupTable lookupTable = new LookupTable();
-
 
       Reader r = new InputStreamReader(new BOMInputStream(in), "UTF-8");
 
@@ -1026,11 +1023,17 @@ public class PersistenceUtil {
         lookupTable.addEntry(values);
         values = CSVUtil.parseLine(r);
       }
-      return lookupTable;
+      return;
     } catch (Exception e) {
       MapTool.showError("PersistenceUtil.error.tableRead", e);
     }
-    return null;
+    return;
+  }
+
+  public static LookupTable loadCsvTable(File file) throws IOException {
+    LookupTable lookupTable = new LookupTable();
+    loadCsvTable(file, lookupTable);
+    return lookupTable;
   }
 
   public static void saveTable(LookupTable lookupTable, File file) throws IOException {

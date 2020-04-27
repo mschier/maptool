@@ -49,7 +49,6 @@ public class CSVUtil {
                 }
                 else if (ch == '\r') {
                     //ignore LF characters
-                    continue;
                 }
                 else if (ch == '\n') {
                     //end of a line, break out
@@ -61,7 +60,7 @@ public class CSVUtil {
             }
             ch = r.read();
         }
-        store.add(curVal.toString().replaceAll("\\uFEFF", ""));
+        store.add(curVal.toString());
         return store;
     }
 }

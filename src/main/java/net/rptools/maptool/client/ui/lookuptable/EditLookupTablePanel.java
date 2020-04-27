@@ -22,16 +22,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JList;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
@@ -46,6 +42,7 @@ import net.rptools.maptool.language.I18N;
 import net.rptools.maptool.model.AssetManager;
 import net.rptools.maptool.model.LookupTable;
 import net.rptools.maptool.model.LookupTable.LookupEntry;
+import net.rptools.maptool.util.PersistenceUtil;
 
 public class EditLookupTablePanel extends AbeillePanel<LookupTableTableModel> {
   private static final long serialVersionUID = 2341539768448195059L;
@@ -171,6 +168,31 @@ public class EditLookupTablePanel extends AbeillePanel<LookupTableTableModel> {
 
   public JCheckBox getAllowLookupCheckbox() {
     return (JCheckBox) getComponent("allowLookupCheckbox");
+  }
+
+  public void initAddFromCSVButton() {
+    JButton button = (JButton) getComponent("fromCSVButton");
+    button.addActionListener(
+            new ActionListener() {
+              public void actionPerformed(ActionEvent e) {
+                JFileChooser chooser = MapTool.getFrame().getLoadCsvFileChooser();
+
+                if (chooser.showOpenDialog(MapTool.getFrame()) != JFileChooser.APPROVE_OPTION) {
+                  return;
+                }
+
+                final File selectedFile = chooser.getSelectedFile();
+                try {
+                  PersistenceUtil.loadCsvTable(selectedFile, lookupTable);
+                  getTableDefinitionTable().setModel(createLookupTableModel(lookupTable));
+                  getTableRollTextField().setText(lookupTable.getRoll());
+                  updateDefinitionTableRowHeights();
+                } catch (IOException ioe) {
+                  MapTool.showError("LookupTablePanel.error.loadFailed", ioe);
+                }
+              }
+            }
+    );
   }
 
   public void initCancelButton() {
