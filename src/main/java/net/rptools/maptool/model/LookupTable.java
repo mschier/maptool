@@ -70,30 +70,6 @@ public class LookupTable {
     getInternalEntryList().add(new LookupEntry(min, max, result, imageId));
   }
 
-  public void addEntry(List<String> strings) {
-    // TODO Consider externalizing this functionality to PersistenceUtil instead
-    // TODO Refactor
-    // TODO Ensure proper error messages for formatting errors
-    int min = 0;
-    int max = 0;
-    String value = null;
-    if (strings.size() == 2) {
-      String[] range = strings.get(0).split("-");
-      min = Integer.parseInt(range[0]);
-      if (range.length == 2) {
-        max = Integer.parseInt(range[1]);
-      } else {
-        max = min;
-      }
-      value = strings.get(1);
-    } else if (strings.size() == 3) {
-      min = Integer.parseInt(strings.get(0));
-      max = Integer.parseInt(strings.get(1));
-      value = strings.get(2);
-    }
-    addEntry(min, max, value, null);
-  }
-
   public LookupEntry getLookup() throws ParserException {
     return getLookup(null);
   }

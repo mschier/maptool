@@ -183,7 +183,7 @@ public class EditLookupTablePanel extends AbeillePanel<LookupTableTableModel> {
 
             final File selectedFile = chooser.getSelectedFile();
             try {
-              PersistenceUtil.loadCsvTable(selectedFile, lookupTable);
+              PersistenceUtil.loadCSVTable(selectedFile, lookupTable);
               getTableDefinitionTable().setModel(createLookupTableModel(lookupTable));
               getTableRollTextField().setText(lookupTable.getRoll());
               updateDefinitionTableRowHeights();

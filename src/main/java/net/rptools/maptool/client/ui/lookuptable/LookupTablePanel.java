@@ -142,7 +142,7 @@ public class LookupTablePanel extends AbeillePanel<LookupTableImagePanelModel> {
     return (JButton) getComponent("exportButton");
   }
 
-  public JButton getfromCSVButton() {
+  public JButton getFromCSVButton() {
     return (JButton) getComponent("fromCSVButton");
   }
 
@@ -321,9 +321,9 @@ public class LookupTablePanel extends AbeillePanel<LookupTableImagePanelModel> {
             });
   }
 
-  public void initNewFromCSVButton() {
-    getfromCSVButton().setMargin(new Insets(0, 0, 0, 0));
-    getfromCSVButton()
+  public void initFromCSVButton() {
+    getFromCSVButton().setMargin(new Insets(0, 0, 0, 0));
+    getFromCSVButton()
         .addActionListener(
             new ActionListener() {
               public void actionPerformed(ActionEvent e) {
@@ -335,7 +335,7 @@ public class LookupTablePanel extends AbeillePanel<LookupTableImagePanelModel> {
 
                 final File selectedFile = chooser.getSelectedFile();
                 try {
-                  LookupTable newTable = PersistenceUtil.loadCsvTable(selectedFile);
+                  LookupTable newTable = PersistenceUtil.loadCSVTable(selectedFile);
                   editorPanel.attach(newTable);
 
                   getEditorDialog().setTitle(I18N.getString("LookupTablePanel.msg.titleNew"));

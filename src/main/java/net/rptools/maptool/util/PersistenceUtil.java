@@ -1010,30 +1010,53 @@ public class PersistenceUtil {
     return null;
   }
 
-  public static void loadCsvTable(File file, LookupTable lookupTable) throws IOException {
+  public static LookupTable loadCSVTable(File file) throws IOException {
+    LookupTable lookupTable = new LookupTable();
+    loadCSVTable(file, lookupTable);
+    return lookupTable;
+  }
+
+  public static void loadCSVTable(File file, LookupTable lookupTable) throws IOException {
     if (!file.exists()) throw new FileNotFoundException();
 
     try (FileInputStream in = new FileInputStream(file)) {
-
-      Reader r = new InputStreamReader(new BOMInputStream(in), "UTF-8");
+      Reader r = new InputStreamReader(new BOMInputStream(in), StandardCharsets.UTF_8);
 
       List<String> values = CSVUtil.parseLine(r);
       while (values != null) {
-        // TODO Ensure proper error messaging about formatting
-        lookupTable.addEntry(values);
+        parseCSVToTable(lookupTable, values);
         values = CSVUtil.parseLine(r);
       }
-      return;
     } catch (Exception e) {
       MapTool.showError("PersistenceUtil.error.tableRead", e);
     }
-    return;
   }
 
-  public static LookupTable loadCsvTable(File file) throws IOException {
-    LookupTable lookupTable = new LookupTable();
-    loadCsvTable(file, lookupTable);
-    return lookupTable;
+  private static void parseCSVToTable(LookupTable lookupTable, List<String> strings) {
+    int min = 0;
+    int max = 0;
+    String value = null;
+
+    try {
+      if (strings.size() == 2) {
+        String[] rollRange = strings.get(0).split("-");
+        min = Integer.parseInt(rollRange[0]);
+        max = rollRange.length == 1 ? min : Integer.parseInt(rollRange[1]);
+        value = strings.get(1);
+
+      } else if (strings.size() == 3) {
+        min = Integer.parseInt(strings.get(0));
+        max = Integer.parseInt(strings.get(1));
+        value = strings.get(2);
+
+      } else {
+        throw new IllegalArgumentException("Array size should either be 2 or 3");
+      }
+    } catch (IllegalArgumentException e) {
+      MapTool.showError("PersistenceUtil.error.csvParse", e);
+    } finally {
+      lookupTable.addEntry(min, max, value, null);
+    }
   }
 
   public static void saveTable(LookupTable lookupTable, File file) throws IOException {
